@@ -1,10 +1,11 @@
 import ListGroup from "./components/ListGroup.tsx";
 import { useState, useEffect } from "react";
 import InputBox from "./components/InputBox.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 
 function App() {
   const [items, setItems] = useState<string[]>(() => {
-    return JSON.parse(window.localStorage.getItem("TO_DO_LIST_ITEMS") || "[]");
+    return JSON.parse(window.localStorage.getItem("TO_DO_LIST_ITEMS") || "{}");
   });
 
   useEffect(() => {
@@ -13,6 +14,7 @@ function App() {
 
   const handleClick = () => {
     const inputBox = document.getElementById("inputBox") as HTMLInputElement;
+    if (items.includes(inputBox.value)) return;
     setItems([...items, inputBox.value]);
     inputBox.value = "";
   }
@@ -23,12 +25,15 @@ function App() {
   }
 
   return (
-    <>
-      <h1>To Do List</h1>
-      <ListGroup onClick={handleDoneClick} items={items} />
-      <InputBox onClick={handleClick} />
-    </>
+    <div className="flex align-center justify-center items-center min-w-screen min-h-screen">
+      <div className="w-1/4">
+        <h1 className="text-2xl font-bold text-center h-full align-text-top">To Do List</h1>
+        <ListGroup onClick={handleDoneClick} items={items}/>
+        <Separator className="my-4" />
+        <InputBox onClick={handleClick}/>
+      </div>
+    </div>
   )
 }
 
-export default App
+export default App;
