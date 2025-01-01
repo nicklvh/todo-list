@@ -1,7 +1,14 @@
 import ListGroup from "./components/ListGroup.tsx";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import InputBox from "./components/InputBox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 function App() {
   const [items, setItems] = useState<string[]>(() => {
@@ -14,7 +21,7 @@ function App() {
 
   const handleClick = () => {
     const inputBox = document.getElementById("inputBox") as HTMLInputElement;
-    if (items.includes(inputBox.value)) return;
+    if (items.includes(inputBox.value) || !inputBox.value) return;
     setItems([...items, inputBox.value]);
     inputBox.value = "";
   }
@@ -24,15 +31,34 @@ function App() {
     setItems(newItems);
   }
 
+  const handleResetClick = () => {
+    setItems([]);
+  }
+
   return (
-    <div className="flex align-center justify-center items-center min-w-screen min-h-screen">
-      <div className="w-1/4">
-        <h1 className="text-2xl font-bold text-center h-full align-text-top">To Do List</h1>
-        <ListGroup onClick={handleDoneClick} items={items}/>
-        <Separator className="my-4" />
-        <InputBox onClick={handleClick}/>
+    <>
+      <div>
+        <Breadcrumb className="flex justify-center font-medium mt-5">
+          <h1 className="font-bold mr-5">To Do List</h1>
+          <BreadcrumbList className="ml-4">
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex justify-center" onClick={handleResetClick}>Reset</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator/>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="https://github.com/nicklvh/todo-list">Source Code</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
-    </div>
+      <div className="mt-10 flex justify-center min-w-screen">
+        <div className="w-1/2">
+          <ListGroup onClick={handleDoneClick} items={items}/>
+          <Separator className="my-4"/>
+          <InputBox onClick={handleClick}/>
+        </div>
+      </div>
+    </>
   )
 }
 
